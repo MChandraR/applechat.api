@@ -22,9 +22,16 @@ express.get("/test",async (req,res)=>{
 
 express.post("/login",async (req,res)=>{
     try{
-        const result = await sql`SELECT*FROM users`;
-        if(result.length > 0){
-            
+        const body = req.body;
+        const result = (await sql`SELECT*FROM users WHERE username=${body.username} AND password=${body.password} LIMIT 1`);
+        if(result.rowCount){
+            res.send({
+                "status" : result.rowCount ? "sukses" : "gagal",
+                "message" : result.rowCount ? "Berhasil login !" : "Username atau password salah !",
+                "user_id" : result.user_id,
+                "email" : result.email,
+                "username" : result.username
+            });
         }else{
             res.send({
                 "status" : "error",
@@ -41,11 +48,14 @@ express.post("/login",async (req,res)=>{
 
 express.post("/register",async (req,res)=>{
     try{
-        const user_id = (await sql`SELECT SUBSTR(user_id,2) AS user_id FROM users ORDER BY user_id DESC LIMIT 1`).rows;
+        const body = req.body;
+        const user_id = (await sql`SELECT SUBSTR(user_id,2) AS user_id FROM users ORDER BY user_id DESC LIMIT 1`).rows.user_id;
         let newID = ("00000000000" + (parseInt.user_id + 1)).slice(-9);
         newID = "U" + newID;
+        const regist = await sql`INSERT INTO users VALUES(${newID}, ${body.username}, ${body.password}, ${body.email}, user);`;
         res.send({
-            newID
+            "id " : newID,
+            "message" : regist
         });
     }catch(e){
         res.send({
