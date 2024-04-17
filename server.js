@@ -47,6 +47,11 @@ express.post("/login",async (req,res)=>{
 });
 
 express.post("/register",async (req,res)=>{
+    let response = {
+        "status" : "error",
+        "message" : "Internal server error !",
+        "data" : {}
+    }
     try{
         const body = req.body;
         const user_id = (await sql`SELECT SUBSTR(user_id,2) AS user_id FROM users ORDER BY user_id DESC LIMIT 1`).rows;
@@ -54,15 +59,11 @@ express.post("/register",async (req,res)=>{
         let newID = ("00000000000" + (parseInt(userID) + 1)).slice(-9);
         newID = "U" + newID;
         const regist = await sql`INSERT INTO users VALUES(${newID}, ${body.username}, ${body.password}, ${body.email}, user);`;
-        res.send({
-            "id " : newID,
-            "message" : regist
-        });
+        response.status = "sukses",
+        response.message = "berhasil mengambil data !"
+        res.send(response);
     }catch(e){
-        res.send({
-            "status" : "error",
-            "message" : e
-        });
+        res.send(response);
     }
 });
 
