@@ -28,9 +28,9 @@ express.post("/login",async (req,res)=>{
             res.send({
                 "status" : result.rowCount ? "sukses" : "gagal",
                 "message" : result.rowCount ? "Berhasil login !" : "Username atau password salah !",
-                "user_id" : result.user_id,
-                "email" : result.email,
-                "username" : result.username
+                "user_id" : result.rows[0].user_id,
+                "email" : result.rows[0].email,
+                "username" : result.rows[0].username
             });
         }else{
             res.send({
