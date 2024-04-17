@@ -49,7 +49,8 @@ express.post("/login",async (req,res)=>{
 express.post("/register",async (req,res)=>{
     try{
         const body = req.body;
-        const user_id = (await sql`SELECT SUBSTR(user_id,2) AS user_id FROM users ORDER BY user_id DESC LIMIT 1`).rows.user_id;
+        const user_id = (await sql`SELECT SUBSTR(user_id,2) AS user_id FROM users ORDER BY user_id DESC LIMIT 1`).rows;
+        let userID = user_id.length ? user_id[0].user_id : "0";
         let newID = ("00000000000" + (parseInt.user_id + 1)).slice(-9);
         newID = "U" + newID;
         const regist = await sql`INSERT INTO users VALUES(${newID}, ${body.username}, ${body.password}, ${body.email}, user);`;
