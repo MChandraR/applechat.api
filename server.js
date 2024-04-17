@@ -12,10 +12,37 @@ server.listen(3000, ()=>{
 });
 
 express.get("/test",async (req,res)=>{
-    const ress = sql`SELECT*FROM data;`;
+    const ress = await sql`SELECT*FROM data;`;
     res.send({
         "message" : ress
     });
+});
+
+express.post("/login",async (req,res)=>{
+    try{
+        const result = await sql`SELECT*FROM users`;
+        if(result.length > 0){
+            
+        }else{
+            res.send({
+                "status" : "error",
+                "message" : "username atau password salah !"
+            });
+        }
+    }catch(e){
+        res.send({
+            "status" : "error",
+            "message" : e
+        });
+    }
+});
+
+express.post("/register",async (req,res)=>{
+    try{
+        const user_id = await sql`SELECT SUBSTR(user_id,2) AS user_id FROM users ORDER BY user_id DESC LIMIT 1`;
+    }catch(e){
+
+    }
 });
 
 
