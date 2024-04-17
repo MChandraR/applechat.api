@@ -12,9 +12,9 @@ server.listen(3000, ()=>{
 });
 
 express.get("/test",async (req,res)=>{
-    const ress = await sql`SELECT*FROM data;`;
+    const ress = (await sql`SELECT*FROM users;`).rows;
     res.send({
-        "message" : ress
+        "message" : ress.rows
     });
 });
 
@@ -39,7 +39,8 @@ express.post("/login",async (req,res)=>{
 
 express.post("/register",async (req,res)=>{
     try{
-        const user_id = await sql`SELECT SUBSTR(user_id,2) AS user_id FROM users ORDER BY user_id DESC LIMIT 1`;
+        const user_id = (await sql`SELECT SUBSTR(user_id,2) AS user_id FROM users ORDER BY user_id DESC LIMIT 1`).rows;
+        let newID = "00000000000" + (parseInt.user_id);
     }catch(e){
 
     }
